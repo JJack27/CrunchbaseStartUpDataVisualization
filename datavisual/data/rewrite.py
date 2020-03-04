@@ -36,7 +36,7 @@ for line in df.values:
                 cols[i] = cols[i].split(",")
                 cols[i] = "".join(cols[i])
             elif type(cols[i]) == type("str"):
-                cols[i] = "\"" + str(cols[i]) + "\""
+                cols[i] = "\"" + str(cols[i]).strip() + "\""
             cols[i] = str(cols[i])
             
         
