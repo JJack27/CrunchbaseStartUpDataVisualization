@@ -25,19 +25,19 @@ import requests
 class FilterAPI(APIView):
 
     def get(self, request,*args, **kwargs):
-        # test query = http://127.0.0.1:8000/filter/?filter1=sd&value1=a&filter2=sa&value2=asdf&filter3=sdoiioj&value3=sdfajior34&label=asdfijoejfwe&value_label=adfsfjie
+        # test query = http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=1996&filter3=Status&threshold3=None&label=count&Unknown=True
         # Read filter values
         filters = {}
         filter_names = [self.request.query_params.get('filter1'),\
             self.request.query_params.get('filter2'),\
             self.request.query_params.get('filter3')]
-        filters[filter_names[0]] = self.request.query_params.get('value1')
-        filters[filter_names[1]] = self.request.query_params.get('value2')
-        filters[filter_names[2]] = self.request.query_params.get('value3')
+        for i in range(len(filter_names)):
+            filters[filter_names[i]] = {}
+            filters[filter_names[i]]['threshold'] = self.request.query_params.get('threshold'+str(i+1))
         
         # Read label values
-        label_name = 'label'+self.request.query_params.get('label') 
-        label = {label_name: self.request.query_params.get('value_label')}
+        label_name = self.request.query_params.get('label') 
+        label = {'label': label_name}
 
         # Read Unknown
         unknown = bool(self.request.query_params.get('unknown'))
@@ -46,7 +46,7 @@ class FilterAPI(APIView):
 
         # ===================
         # Testing code
-        response = {label_name: label[label_name]}
+        response = label
 
         for key in filters.keys():
             response[key] = filters[key]
@@ -54,13 +54,10 @@ class FilterAPI(APIView):
         # ====================
 
         # Get date from the data base
-        path_of_data = '../data/investments.csv'
+        path_of_data = '../data/cleaned_data.csv'
 
         layer1 = {}
         layer2 = {}
         layer3 = {}
-
-
-
 
         return Response(response, status = 200)

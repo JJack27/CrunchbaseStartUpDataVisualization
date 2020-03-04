@@ -26,6 +26,9 @@ def main():
         unclean_data[col] = unclean_data[col].fillna("Unknown")
 
     unclean_data.to_csv(r'./cleaned_data.csv', index = False)
+    markets = unclean_data.groupby(['market'])['market']
+    market_count = markets.count()
+    print(market_count[market_count > 500])
 
 if __name__ == "__main__":
     main()
