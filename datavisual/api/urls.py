@@ -16,11 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
-from visual import views as visual_view
-from api import urls as api_urls
+from .views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', visual_view.index),
-    path('filter/', include('api.urls'))
+    path('', FilterAPI.as_view())
 ]
