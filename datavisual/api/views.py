@@ -59,25 +59,7 @@ def generate_tree(data):
     keys = [] 
     for i in range(len(label[0])):
         keys.append([levels[0][label[0][i]],levels[1][label[1][i]],levels[2][label[2][i]]])
-    #for key in keys:
-    #    print(key)
-    '''
-    tree = {'name': 'Root', 'children':[], 'children_names':[]}
-    for key in keys:
-        if key[0] not in tree['children_names']:
-            tree['children_names'].append(key[0])
-            tree['children'].append({'name': key[0], 'children':[], 'children_name':[]})
-
-        if key[1] not in tree[key[0]]['children_names']:
-            tree[key[0]]['children_names'].append(key[1])
-            for child in tree['children']:
-                if child['name'] == key[1]:
-                    child['children'].append({'name': key[1], 'children':[], 'children_name':[]})
-
-        if key[1] not in tree[key[0]][]:
-            tree[key[0]]['children_names'].append(key[1])
-            tree[key[0]]['children'].append({'name': key[1], 'children':[], 'children_name':[]})
-    '''
+    
     tree = {}
     for key in keys:
         if key[0] not in tree.keys():
