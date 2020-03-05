@@ -13,8 +13,9 @@ def main():
     
     
     # set nan in market to unknown
-    columns_to_fill_na = ['market', 'category_list', 'homepage_url', 'status', \
-        'country_code', 'region', 'city', 'founded_at', 'founded_year', 'state_code']
+    columns_to_fill_na_unknown = ['market', 'category_list', 'homepage_url', 'status', \
+        'country_code', 'region', 'city', 'founded_at',  'state_code']
+    columns_to_fill_na_zero = ['founded_year']
     columns_to_drop = ['founded_month', 'founded_quarter', 'permalink']
 
     # drop columns
@@ -22,8 +23,13 @@ def main():
         unclean_data = unclean_data.drop(columns = col)
     
     # fill na to "Unknown"
-    for col in columns_to_fill_na:
+    for col in columns_to_fill_na_unknown:
         unclean_data[col] = unclean_data[col].fillna("Unknown")
+    
+    # fill na to 0
+    for col in columns_to_fill_na_zero:
+        unclean_data[col] = unclean_data[col].fillna(0)
+    
 
     # adding column market_count
     markets = unclean_data.groupby(['market'])['market']

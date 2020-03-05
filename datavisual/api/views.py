@@ -24,32 +24,115 @@ import requests
 from django.conf import settings
 
 # return a data frame of selected features and counts
-def get_counts(df, features, threshold, unknown):
-    groups = df.groupby(features)['permalink']
-    counts = groups.count()
-    counts = counts[counts > threshold]
-    print(unknown)
+def get_counts(df, filters, unknown):
+
+    filtered_data = df.copy()
+    
+    equal_filter_cols = ['category_list', 'homepage_url', 'status', \
+        'country_code', 'region', 'city', 'founded_at',  'state_code']
     if not unknown:
-        counts = counts.drop("Unknown")
+        for key in filters.keys():
+            if key in equal_filter_cols or key == 'market':
+                filtered_data = filtered_data[filtered_data[key] != 'Unknown']
+            else:
+                filtered_data = filtered_data[filtered_data[key] != 0]
+    
+    for fil, threshold in filters.items():
+        if fil == "market":
+            filtered_data = filtered_data[filtered_data['market_count'] > threshold]
+        elif fil in equal_filter_cols:
+            if threshold != 'None':
+                filtered_data = filtered_data[filtered_data['market_count'] == threshold]
+        else:
+            filtered_data = filtered_data[filtered_data[fil] > threshold]
+
+    groups = filtered_data.groupby(list(filters.keys()))['market']
+    counts = groups.count()
+
+    
     return counts
+
+def generate_tree(data):
+    # first generate index
+    label = data.index.labels
+    levels = data.index.levels
+    keys = [] 
+    for i in range(len(label[0])):
+        keys.append([levels[0][label[0][i]],levels[1][label[1][i]],levels[2][label[2][i]]])
+    #for key in keys:
+    #    print(key)
+    '''
+    tree = {'name': 'Root', 'children':[], 'children_names':[]}
+    for key in keys:
+        if key[0] not in tree['children_names']:
+            tree['children_names'].append(key[0])
+            tree['children'].append({'name': key[0], 'children':[], 'children_name':[]})
+
+        if key[1] not in tree[key[0]]['children_names']:
+            tree[key[0]]['children_names'].append(key[1])
+            for child in tree['children']:
+                if child['name'] == key[1]:
+                    child['children'].append({'name': key[1], 'children':[], 'children_name':[]})
+
+        if key[1] not in tree[key[0]][]:
+            tree[key[0]]['children_names'].append(key[1])
+            tree[key[0]]['children'].append({'name': key[1], 'children':[], 'children_name':[]})
+    '''
+    tree = {}
+    for key in keys:
+        if key[0] not in tree.keys():
+            tree[key[0]] = {'name':key[0]}
+            
+        if key[1] not in tree[key[0]].keys():
+            tree[key[0]][key[1]] = {'name':key[1]}
+        
+        if key[2] not in tree[key[0]][key[1]].keys():
+            tree[key[0]][key[1]][key[2]] = {'name': key[2], 'value':data[key[0]][key[1]][key[2]]}#, 'value':data[key[0]][key[1]][key[2]]
+    
+    re_tree = {'name': 'Root', 'children': [], 'children_names':[]}
+    
+    for key in tree.keys():
+        child_dic1 = {'name':key, 'children':[], 'children_names':[]}
+        if tree[key]['name'] not in re_tree['children_names']:
+            re_tree['children_names'].append(key)
+            re_tree['children'].append(child_dic1)
+        
+        for key2 in tree[key].keys():
+            if key2 == 'name':
+                continue
+            child_dic2 = {'name':key2, 'children':[], 'children_names':[]}
+            if key2 not in child_dic1['children_names']:
+                child_dic1['children_names'].append(key2)
+                child_dic1['children'].append(child_dic2)
+
+            for key3 in tree[key][key2].keys():
+                if key3 == 'name':
+                    continue
+                child_dic3 = {'name':key3, 'value': tree[key][key2][key3]['value']}
+                if key3 not in child_dic2['children_names']:
+                    child_dic2['children_names'].append(key3)
+                    child_dic2['children'].append(child_dic3)
+                    
+
+    return re_tree
+
 
 
 
 class FilterAPI(APIView):
 
     def get(self, request,*args, **kwargs):
-        # test query = http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=1996&filter3=status&threshold3=None&label=count&unknown=True
+        # test query = http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=2008&filter3=status&threshold3=None&label=count&unknown=False
         # Read filter values
         filters = {}
         filter_names = [self.request.query_params.get('filter1'),\
             self.request.query_params.get('filter2'),\
             self.request.query_params.get('filter3')]
         for i in range(len(filter_names)):
-            filters[filter_names[i]] = {}
             try:
-                filters[filter_names[i]]['threshold'] = float(self.request.query_params.get('threshold'+str(i+1)))
+                filters[filter_names[i]] = float(self.request.query_params.get('threshold'+str(i+1)))
             except:
-                filters[filter_names[i]]['threshold'] = 0
+                filters[filter_names[i]] = self.request.query_params.get('threshold'+str(i+1))
         
         # Read label values
         label_name = self.request.query_params.get('label') 
@@ -57,29 +140,18 @@ class FilterAPI(APIView):
 
         # Read Unknown
         unknown = True if self.request.query_params.get("unknown") == 'True' else False 
-
         response = {"Result": "data"}
-
-        # ===================
-        # Testing code
-        response = label
-
-        for key in filters.keys():
-            response[key] = filters[key]
-        # End of testing
-        # ====================
 
         # Get date from the data base
         path_of_data = './cleaned_data.csv'
-        df = pd.read_csv(settings.DATA_FOLDER, encoding='unicode-escape')
+        df = pd.read_csv(settings.DATA_DIR, encoding='unicode-escape')
         
         # generate tree structure of for data visualizing
         data = {'name':'root'}
         if label_name == 'count':
-            children = get_counts(df, filter_names[0], filters[filter_names[0]]['threshold'], unknown)
+            children = get_counts(df, filters, unknown)
 
-        print(children)
-
-
-
+        #print(children.index)
+        tree = generate_tree(children)
+        response['tree'] = tree
         return Response(response, status = 200)
