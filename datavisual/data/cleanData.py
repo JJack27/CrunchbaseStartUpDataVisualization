@@ -15,7 +15,7 @@ def main():
     # set nan in market to unknown
     columns_to_fill_na = ['market', 'category_list', 'homepage_url', 'status', \
         'country_code', 'region', 'city', 'founded_at', 'founded_year', 'state_code']
-    columns_to_drop = ['founded_month', 'founded_quarter']
+    columns_to_drop = ['founded_month', 'founded_quarter', 'permalink']
 
     # drop columns
     for col in columns_to_drop:
@@ -25,10 +25,23 @@ def main():
     for col in columns_to_fill_na:
         unclean_data[col] = unclean_data[col].fillna("Unknown")
 
-    unclean_data.to_csv(r'./cleaned_data.csv', index = False)
+    # adding column market_count
     markets = unclean_data.groupby(['market'])['market']
     market_count = markets.count()
-    print(market_count[market_count > 500])
+    market_count_col = []
+    for mar in unclean_data['market']:
+        market_count_col.append(market_count[mar])
+    unclean_data['market_count'] = market_count_col
+
+    # adding column market_sum
+    market_sum = unclean_data.groupby(['market'])['funding_total_usd'].sum()
+    market_sum_col = []
+    for mar in unclean_data['market']:
+        market_sum_col.append(market_sum[mar])
+    unclean_data['market_sum'] = market_sum_col
+    
+    unclean_data.to_csv(r'./cleaned_data.csv', index = False)
+
 
 if __name__ == "__main__":
     main()
