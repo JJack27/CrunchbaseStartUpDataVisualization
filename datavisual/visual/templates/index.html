@@ -12,13 +12,94 @@
         </div>
 
         <div class="col-sm-4 content-area" id="select-area">
-
+            <div class="row layer-select">
+                <div class="form-group col-sm-6">
+                    <h5 class="select-header form-content">First Layer</h2>
+                        <select class="form-control form-content" id="layer-1-select">
+                        </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="range1">Range 1</label>
+                    <input type="number" class="form-control" id="range1" aria-describedby="range1Help">
+                    <small id="range1Help" class="form-text text-muted">Ranging from _ to _</small>
+                </div>
+            </div>
+            <div class="row layer-select">
+                <div class="form-group col-sm-6">
+                    <h5 class="select-header form-content">Second Layer</h2>
+                        <select class="form-control form-content" id="layer-2-select">
+                        </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="range1">Range 2</label>
+                    <input type="number" class="form-control" id="range2" aria-describedby="range2Help">
+                    <small id="range2Help" class="form-text text-muted">Ranging from _ to _</small>
+                </div>
+            </div>
+            <div class="row layer-select">
+                <div class="form-group col-sm-6">
+                    <h5 class="select-header form-content">Third Layer</h2>
+                        <select class="form-control form-content" id="layer-3-select">
+                        </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="range1">Range 3</label>
+                    <input type="number" class="form-control" id="range3" aria-describedby="range3Help">
+                    <small id="range3Help" class="form-text text-muted">Ranging from _ to _</small>
+                </div>
+            </div>
+            <div class="row layer-select">
+                <div class="form-group col-sm-6">
+                    <h5 class="select-header form-content">Metric</h2>
+                        <select class="form-control form-content" id="metric-select">
+                        </select>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    var request = "http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=2008&filter3=status&threshold3=None&label=count&unknown=False";
+    selectable_columns = {
+        "market": "Target Market",
+        "status": "Current Status",
+        "country_code": "Country Code",
+        "state_code": "State Code",
+        "region": "Region",
+        "city": "City",
+        "funding_rounds": "Funding Rounds",
+        "founded_year": "Founded Year",
+    };
+    discrete_metric = {
+        "count": "Number of Companies"
+    }
+    numerical_metric = {
+        "funding_total_usd": "Total Funding (in USD)",
+        "seed": "Seed Round Amount",
+        "venture": "Venture Round Amount",
+        "equity_crowdfunding": "Equity Crowdfunding Amount",
+        "undisclosed": "Undisclosed Investment",
+        "convertible_note": "Convertiable Note",
+        "debt_financing": "Debt Financing",
+        "angel": "Angel Round Amount",
+        "grant": "Grant",
+        "private_equity": "Private Equity",
+        "post_ipo_equity": "Post IPO Equity",
+        "post_ipo_debt": "Post IPO Debt",
+        "secondary_market": "Secondary Market",
+        "product_crowdfunding": "Product Crowdfunding Amount",
+        "round_A": "Round A",
+        "round_B": "Round B",
+        "round_C": "Round C",
+        "round_D": "Round D",
+        "round_E": "Round E",
+        "round_F": "Round F",
+        "round_G": "Round G",
+        "round_H": "Round H"
+    };
+    init_page();
+    var request =
+        "http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=2008&filter3=status&threshold3=None&label=count&unknown=False";
     load_chart(request);
 </script>
-{% endblock %} 
+{% endblock %}

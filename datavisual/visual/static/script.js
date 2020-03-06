@@ -34,12 +34,32 @@ function sendJSONHTTPGet(url, objects, callback, remote={}) {
 
 // function to send request to host and load the chart
 function load_chart(request){
-
+    
 }
 
 
 // callback function to draw chart given response
 function load_chart_callback(response){
-    
+
 }
 
+// function to initialize page
+function init_page(){
+    for (i = 1; i <=3; i++ ){
+        var selector = document.getElementById("layer-" + i + "-select");
+        for (key in selectable_columns){
+            var option = document.createElement("option");
+            option.innerText = selectable_columns[key];
+            selector.appendChild(option);
+        }
+    }
+
+    var metric = document.getElementById("metric-select");
+    var all_metrics = Object.assign({}, discrete_metric, numerical_metric);
+    for (key in all_metrics){
+        var option = document.createElement("option");
+            option.innerText = all_metrics[key];
+            metric.appendChild(option);
+    }
+    
+}

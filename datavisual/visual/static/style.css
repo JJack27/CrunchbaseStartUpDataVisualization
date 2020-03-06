@@ -1,12 +1,17 @@
 .content{
-    margin-left: 15%;
-    margin-right:15%;
+    margin-left: 10%;
+    margin-right:10%;
     margin-top: 50pt;
 }
 
 .content-area{
     height: 500pt;
 }
+
+.layer-select{
+    margin-top: 5%;
+}
+
 
 #canvas{
     background-color: #ffeeaa;
@@ -15,3 +20,4 @@
 #select-area{
     background-color: aqua;
 }
+
