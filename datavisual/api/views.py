@@ -165,11 +165,9 @@ class FilterAPI(APIView):
         response = {"Result": "data"}
 
         # Get date from the data base
-        path_of_data = './cleaned_data.csv'
         df = pd.read_csv(settings.DATA_DIR, encoding='unicode-escape')
         
         # generate tree structure of for data visualizing
-        data = {'name':'root'}
         children = get_counts(df, filters, unknown, label)
         print(children)
 

@@ -63,3 +63,15 @@ function init_page(){
     }
     
 }
+
+
+// JQuery functions
+/*
+$( "#s" ) .change(function () { 
+    console.log($(this).attr('id'));
+      document.getElementById("dis").innerHTML="You selected: "+document.getElementById("s").value;  
+  }); 
+*/
+$(".layer-selector").change(function(){
+    
+});
