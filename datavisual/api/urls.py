@@ -19,5 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .views import *
 
 urlpatterns = [
-    path('', FilterAPI.as_view())
+    path('', FilterAPI.as_view()),
+    path('get_options/', OptionAPI.as_view()),
+    path('get_range/', RangeAPI.as_view()),
 ]

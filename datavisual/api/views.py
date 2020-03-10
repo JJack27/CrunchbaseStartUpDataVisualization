@@ -144,7 +144,7 @@ def generate_tree(data):
 class FilterAPI(APIView):
 
     def get(self, request,*args, **kwargs):
-        # test query = http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=2008&filter3=status&threshold3=None&label=count&unknown=False
+        # test query = http://127.0.0.1:8000/filter/?filter1=market&threshold1=500&filter2=founded_year&threshold2=2008&filter3=status&threshold3=None&label=count&unknown=false
         # Read filter values
         filters = {}
         filter_names = [self.request.query_params.get('filter1'),\
@@ -161,7 +161,7 @@ class FilterAPI(APIView):
         label = {'label': label_name}
 
         # Read Unknown
-        unknown = True if self.request.query_params.get("unknown") == 'True' else False 
+        unknown = True if self.request.query_params.get("unknown") == 'true' else False 
         response = {"Result": "data"}
 
         # Get date from the data base
@@ -173,4 +173,48 @@ class FilterAPI(APIView):
 
         tree = generate_tree(children)
         response['tree'] = tree
+        return Response(response, status = 200)
+
+# getting all options for given columns
+class OptionAPI(APIView):
+
+    def get(self, request, *args, **kwargs):
+        response = {}
+        col = self.request.query_params.get('col')
+        unknown = True if self.request.query_params.get("unknown") == 'true' else False 
+
+        # Get date from the data base
+        df = pd.read_csv(settings.DATA_DIR, encoding='unicode-escape')
+
+        types = df[col].unique().tolist()
+    
+        if not unknown:
+            types.remove('Unknown')
+
+        response['data'] = types
+        response['cond_id'] = self.request.query_params.get('cond_id')
+        response['helper_id'] = self.request.query_params.get('helper_id')
+        return Response(response, status = 200)
+
+
+# getting all options for given columns
+class RangeAPI(APIView):
+
+    def get(self, request, *args, **kwargs):
+        response = {}
+        col = self.request.query_params.get('col')
+        if col == 'market':
+            col = "market_count"
+        # Get date from the data base
+        df = pd.read_csv(settings.DATA_DIR, encoding='unicode-escape')
+
+        minimum = df[col].min()
+        maximum = df[col].max()
+
+        response['min'] = minimum
+        response['max'] = maximum
+
+
+        response['cond_id'] = self.request.query_params.get('cond_id')
+        response['helper_id'] = self.request.query_params.get('helper_id')
         return Response(response, status = 200)

@@ -19,9 +19,11 @@
                         </select>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="range1">Range 1</label>
-                    <input type="number" class="form-control" id="range1" aria-describedby="range1Help">
-                    <small id="range1Help" class="form-text text-muted">Ranging from _ to _</small>
+                    <div id="cond1">
+                    </div>
+                    <!-- <input type="number" class="form-control" id="cosd1" aria-describedby="cond1Help">
+                    <small id="cond1Help" class="form-text text-muted"></small> 
+                    -->
                 </div>
             </div>
             <div class="row layer-select">
@@ -31,9 +33,11 @@
                         </select>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="range1">Range 2</label>
-                    <input type="number" class="form-control" id="range2" aria-describedby="range2Help">
-                    <small id="range2Help" class="form-text text-muted">Ranging from _ to _</small>
+                    <div id="cond2">
+                    </div>
+                    <!--
+                    <input type="number" class="form-control" id="cosnd2" aria-describedby="cond2Help">
+                    <small id="cond2Help" class="form-text text-muted"></small>-->
                 </div>
             </div>
             <div class="row layer-select">
@@ -43,9 +47,11 @@
                         </select>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="range1">Range 3</label>
-                    <input type="number" class="form-control" id="range3" aria-describedby="range3Help">
-                    <small id="range3Help" class="form-text text-muted">Ranging from _ to _</small>
+                    <div id="cond3">
+                    </div>
+                    <!--
+                    <input type="number" class="form-control" id="cosnd3" aria-describedby="cond3Help">
+                    <small id="cond3Help" class="form-text text-muted"></small>-->
                 </div>
             </div>
             <div class="row layer-select">
@@ -54,12 +60,24 @@
                         <select class="form-control form-content" id="metric-select">
                         </select>
                 </div>
+
+                <div class="form-group col-sm-6">
+                    <div class="form-check form-check-inline" style="margin-top:30pt">
+                        <input class="form-check-input" type="checkbox" id="unknownCheckbox" value="False">
+                        <label class="form-check-label" for="inlineCheckbox1">Display Unknown</label>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
 
 <script>
+    const csrf_token = "{{ csrf_token }}";
+    unknown = false;
+    host_to_send = '{{ host }}';
+    console.log(host_to_send);
     selectable_columns = {
         "market": "Target Market",
         "status": "Current Status",
@@ -70,6 +88,21 @@
         "funding_rounds": "Funding Rounds",
         "founded_year": "Founded Year",
     };
+
+    des_cols ={
+        "status": "Current Status",
+        "country_code": "Country Code",
+        "state_code": "State Code",
+        "region": "Region",
+        "city": "City"
+    };
+
+    num_cols = {
+        "market": "Target Market",
+        "funding_rounds": "Funding Rounds",
+        "founded_year": "Founded Year"
+    }
+
     discrete_metric = {
         "count": "Number of Companies"
     }
