@@ -30,6 +30,37 @@ function load_chart_callback(response){
 
 }
 
+function generate_request(){
+    request = host_to_send + "/filter/?";
+    filters = {
+        "filter1": $("#layer-1-select")[0].options[$("#layer-1-select")[0].selectedIndex].value,
+        "filter2": $("#layer-2-select")[0].options[$("#layer-2-select")[0].selectedIndex].value,
+        "filter3": $("#layer-3-select")[0].options[$("#layer-3-select")[0].selectedIndex].value,
+    }
+    for (key in filters){
+        var dic = Object.assign({}, des_cols,num_cols);
+        request += key + "=" + getKeyByValue(dic, filters[key]) + "&";
+    }
+
+    // getting thresholds
+    thresholds = {};
+    for (var i = 1; i <= 3; i++){
+        var cond_input = document.getElementById("cond"+i+"input");
+        
+        if (cond_input.tagName == "INPUT"){
+            request += "threshold"+i+"=" + cond_input.value +"&";
+        }else{
+            var opt = cond_input.options[cond_input.options.selectedIndex].value;
+            request += "threshold"+i+"=" + opt + "&";
+        }
+    }
+
+    request += "unknown=" + unknown + "&";
+    var metric = $("#metric-select")[0].options[$("#metric-select")[0].selectedIndex].value;
+    request += "label="+ getKeyByValue(Object.assign({}, discrete_metric,numerical_metric), metric);
+    return request;
+}
+
 // num_cond_callback
 function num_cond_callback(response){
     var response = JSON.parse(response);
@@ -56,6 +87,7 @@ function num_cond_callback(response){
     cond_input.setAttribute("type", "number");
     cond_input.setAttribute("min", min);
     cond_input.setAttribute("max", max);
+    cond_input.value = 500;
 
     var cond_help = document.createElement("small");
     cond_help.setAttribute("class", "form-text text-muted");
@@ -64,6 +96,7 @@ function num_cond_callback(response){
     cond_div.appendChild(label);
     cond_div.appendChild(cond_input);
     cond_div.appendChild(cond_help);
+    return ;
 }
 
 // des_cond_callback
@@ -109,19 +142,60 @@ function des_cond_callback(response){
     cond_div.appendChild(label);
     cond_div.appendChild(cond_input);
     cond_div.appendChild(cond_help); 
+    return;
+}
+
+
+function initialize_selector(selector){
+    var id = selector.getAttribute('id');
+    var opt = selector.options[selector.selectedIndex];
+        
+    // get the condition range or options for the changed layer
+    var number = id.split("-")[1];
+    var arg = {"cond_id": "cond"+number,
+                    "helper_id": "cond"+ number + "Help"}
+        
+    // send request to corresponding api
+    if (Object.values(num_cols).indexOf(opt.value) > -1){
+        var col_to_change = getKeyByValue(num_cols, opt.value);
+        var request = host_to_send + "/filter/get_range/?col=" + col_to_change;
+        for (var i in arg){
+            request += "&" + i + '=' + arg[i];
+        }
+        sendJSONHTTPGet(request, {}, num_cond_callback);
+    }else{
+        var col_to_change = getKeyByValue(des_cols, opt.value);
+        var request = host_to_send + "/filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
+        for (var i in arg){
+            request += "&" + i + '=' + arg[i];
+        }
+        sendJSONHTTPGet(request, {}, des_cond_callback);
+    }
+    return;
 }
 
 
 // function to initialize page
 function init_page(){
 
-    for (i = 1; i <=3; i++ ){
+    for (var i = 1; i <=3; i++ ){
         var selector = document.getElementById("layer-" + i + "-select");
         for (key in selectable_columns){
             var option = document.createElement("option");
             option.innerText = selectable_columns[key];
-            selector.appendChild(option);
+            
+            // Add default value for layers
+            if(i == 1 && key=='market'){
+                option.setAttribute("selected","");
+            }else if(i == 2 && key=='country_code'){
+                option.setAttribute("selected","");
+            }else if(i == 3 && key=='status'){
+                option.setAttribute("selected","");
+            }
+            selector.appendChild(option); 
         }
+        
+        initialize_selector(selector);
     }
 
     var metric = document.getElementById("metric-select");
@@ -131,7 +205,6 @@ function init_page(){
             option.innerText = all_metrics[key];
             metric.appendChild(option);
     }
-    
 }
 
 
@@ -139,8 +212,14 @@ function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
 
+
+
+
 // JQuery functions
 $(document).ready(function(){
+
+    
+
 
     // function for changing layer type that are also changing the value of range or conditions
     $(".layer-selector").change(function(){
@@ -159,7 +238,6 @@ $(document).ready(function(){
             for (i in arg){
                 request += "&" + i + '=' + arg[i];
             }
-            console.log(request);
             sendJSONHTTPGet(request, {}, num_cond_callback);
         }else{
             var col_to_change = getKeyByValue(des_cols, opt.value);
@@ -170,7 +248,11 @@ $(document).ready(function(){
             sendJSONHTTPGet(request, {}, des_cond_callback);
         }
     });
-
+    
+    $("button").click(function(){
+        var request = generate_request();
+        console.log(request);
+    })
 
     // function for checkbox
     $("#unknownCheckbox").click(function(){
