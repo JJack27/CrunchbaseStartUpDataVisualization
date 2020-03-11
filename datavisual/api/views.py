@@ -45,7 +45,7 @@ def get_counts(df, filters, unknown, metric):
             filtered_data = filtered_data[filtered_data['market_count'] > threshold]
         elif fil in equal_filter_cols:
             if threshold != 'None':
-                filtered_data = filtered_data[filtered_data['market_count'] == threshold]
+                filtered_data = filtered_data[filtered_data[fil] == threshold]
         else:
             filtered_data = filtered_data[filtered_data[fil] > threshold]
 
@@ -54,7 +54,7 @@ def get_counts(df, filters, unknown, metric):
         groups = filtered_data.groupby(list(filters.keys()))['market']
         result = groups.count()
     else:
-        groups = filtered_data.groupby(list(filters.keys()))['funding_total_usd']
+        groups = filtered_data.groupby(list(filters.keys()))[metric]
         result = groups.sum()
     return result
 
@@ -157,8 +157,7 @@ class FilterAPI(APIView):
                 filters[filter_names[i]] = self.request.query_params.get('threshold'+str(i+1))
         
         # Read label values
-        label_name = self.request.query_params.get('label') 
-        label = {'label': label_name}
+        label = self.request.query_params.get('label') 
 
         # Read Unknown
         unknown = True if self.request.query_params.get("unknown") == 'true' else False 
@@ -169,7 +168,7 @@ class FilterAPI(APIView):
         
         # generate tree structure of for data visualizing
         children = get_counts(df, filters, unknown, label)
-        print(children)
+
 
         tree = generate_tree(children)
         response['tree'] = tree

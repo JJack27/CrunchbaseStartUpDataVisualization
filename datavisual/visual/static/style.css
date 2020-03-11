@@ -12,12 +12,14 @@
     margin-top: 5%;
 }
 
+.button-col{
+    align-items: center;
+}
 
 #canvas{
-    background-color: #ffeeaa;
 }
 
 #select-area{
-    background-color: aqua;
+    background-color: #eeeeee;
 }
 
