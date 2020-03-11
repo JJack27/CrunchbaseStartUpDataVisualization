@@ -19,16 +19,28 @@ function sendJSONHTTPGet(url, objects, callback) {
     xhr.send(JSON.stringify(objects));
 }
 
-// function to send request to host and load the chart
-function load_chart(request){
-    
+// call back function
+function load_chart(response){
+    var response = JSON.parse(response);
+    const color = d3.scaleOrdinal(d3.schemePaired);
+    var child = document.getElementById("chart").lastElementChild;  
+    while (child) { 
+        document.getElementById("chart").removeChild(child); 
+        child = document.getElementById("chart").lastElementChild; 
+    }
+
+    Sunburst()
+      .data(response['tree'])
+      .width(800)
+      .height(600)
+      .color(d => color(d.name))
+      .minSliceAngle(.4)
+      .excludeRoot(true)
+      .showLabels(true)
+      .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)
+    (document.getElementById('chart'));
 }
 
-
-// callback function to draw chart given response
-function load_chart_callback(response){
-
-}
 
 function generate_request(){
     request = host_to_send + "/filter/?";
@@ -252,6 +264,7 @@ $(document).ready(function(){
     $("button").click(function(){
         var request = generate_request();
         console.log(request);
+        sendJSONHTTPGet(request, {}, load_chart);
     })
 
     // function for checkbox
