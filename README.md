@@ -1,15 +1,25 @@
 # MM802MiniProject
 
-## User Story:
-- As a user, I want to browse investment data group by companies target market.
-- As a user, I want to browse investment data group by number of funding rounds.
-- As a user, I want to browse investment data group by the year they founded.
-- As a user, I want to add filter to data on the time (in date, month, year) they founded.
-- As a user, I want to add filter to data on the target market.
-- As a suer, I want to see sunburst is the pattern that visualizes data.
-- As a user, I want to see the amount of total funding as the size of sunbrust.
-- As a user, I want to choose what the second layer is grouped by.
-- As a user, I want to choose what the third layer is groupd by.
-- As a user, I want to choose what the fourth layer is grouped by.
-- As a user, I want to click on the block on the fourth layer.
-- As a user, I want to see a list of startups when I click on the block on the fourth layer.
+## Requrements:
+- certifi==2019.3.9
+- chardet==3.0.4
+- dj-database-url==0.5.0
+- Django==2.1.7
+- django-bootstrap4==0.0.7 -e git+https://github.com/theatlantic/django-chosen.git@a603281497e3214eff37c735fce8da152038c122#egg=django_chosen
+- django-cors-headers==2.5.2
+- django-heroku==0.3.1
+- djangorestframework==3.9.2
+- gunicorn==19.9.0
+- idna==2.5
+- psycopg2==2.7.7
+- pytz==2018.9
+- requests==2.18.1
+- urllib3==1.21.1
+- whitenoise==4.1.2
+
+
+## How to Run:
+Make sure above requirements are satisified. Then change the directory to `/datavisual` and run 
+```
+python3 manage.py runserver
+```
