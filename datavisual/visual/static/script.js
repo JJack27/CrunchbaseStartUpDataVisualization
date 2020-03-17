@@ -43,7 +43,7 @@ function load_chart(response){
 
 
 function generate_request(){
-    request = host_to_send + "/filter/?";
+    var request = host_to_send + "/filter/?";
     filters = {
         "filter1": $("#layer-1-select")[0].options[$("#layer-1-select")[0].selectedIndex].value,
         "filter2": $("#layer-2-select")[0].options[$("#layer-2-select")[0].selectedIndex].value,
@@ -55,7 +55,7 @@ function generate_request(){
     }
 
     // getting thresholds
-    thresholds = {};
+    var thresholds = {};
     for (var i = 1; i <= 3; i++){
         var cond_input = document.getElementById("cond"+i+"input");
         
@@ -178,6 +178,7 @@ function initialize_selector(selector){
     }else{
         var col_to_change = getKeyByValue(des_cols, opt.value);
         var request = host_to_send + "/filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
+        console.log(request);
         for (var i in arg){
             request += "&" + i + '=' + arg[i];
         }
