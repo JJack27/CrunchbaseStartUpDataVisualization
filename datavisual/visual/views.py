@@ -3,5 +3,5 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-    host = "http://localhost:8000"
+    host = "104.155.161.154"
     return render(request, 'index.html', {'host': host})
