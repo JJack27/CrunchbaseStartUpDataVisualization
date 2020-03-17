@@ -14,5 +14,5 @@ pytz==2018.9
 requests==2.18.1
 urllib3==1.21.1
 whitenoise==4.1.2
-numpy==1.8.2
-pandas==1.0.2
+numpy==1.18.1
+pandas==0.23.4
