@@ -24,7 +24,7 @@ SECRET_KEY = 'vyk7n-g4+pd4*s3$8$^p=b_hb+_x2xfhd(bc12&lm448@-3#w&'
 # SECURITY WARNING: don't run with debug turned on in production!	
 DEBUG = True	
 
-ALLOWED_HOSTS = []	
+ALLOWED_HOSTS = ["cunch.herokuapp.com"]	
 
 
 # Application definition	

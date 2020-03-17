@@ -3,5 +3,5 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-    host = "104.155.161.154"
+    host = "cunch.herokuapp.com"
     return render(request, 'index.html', {'host': host})
