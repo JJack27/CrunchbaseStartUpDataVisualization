@@ -126,3 +126,4 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
+django_heroku.settings(locals())
