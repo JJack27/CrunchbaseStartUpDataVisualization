@@ -43,7 +43,7 @@ function load_chart(response){
 
 
 function generate_request(){
-    var request = host_to_send + "/filter/?";
+    var request = host_to_send + "filter/?";
     filters = {
         "filter1": $("#layer-1-select")[0].options[$("#layer-1-select")[0].selectedIndex].value,
         "filter2": $("#layer-2-select")[0].options[$("#layer-2-select")[0].selectedIndex].value,
@@ -170,14 +170,14 @@ function initialize_selector(selector){
     // send request to corresponding api
     if (Object.values(num_cols).indexOf(opt.value) > -1){
         var col_to_change = getKeyByValue(num_cols, opt.value);
-        var request = host_to_send + "/filter/get_range/?col=" + col_to_change;
+        var request = host_to_send + "filter/get_range/?col=" + col_to_change;
         for (var i in arg){
             request += "&" + i + '=' + arg[i];
         }
         sendJSONHTTPGet(request, {}, num_cond_callback);
     }else{
         var col_to_change = getKeyByValue(des_cols, opt.value);
-        var request = host_to_send + "/filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
+        var request = host_to_send + "filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
         console.log(request);
         for (var i in arg){
             request += "&" + i + '=' + arg[i];
@@ -247,14 +247,14 @@ $(document).ready(function(){
         // send request to corresponding api
         if (Object.values(num_cols).indexOf(opt.value) > -1){
             var col_to_change = getKeyByValue(num_cols, opt.value);
-            var request = host_to_send + "/filter/get_range/?col=" + col_to_change;
+            var request = host_to_send + "filter/get_range/?col=" + col_to_change;
             for (i in arg){
                 request += "&" + i + '=' + arg[i];
             }
             sendJSONHTTPGet(request, {}, num_cond_callback);
         }else{
             var col_to_change = getKeyByValue(des_cols, opt.value);
-            var request = host_to_send + "/filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
+            var request = host_to_send + "filter/get_options/?col=" + col_to_change + "&unkown="+unknown;
             for (i in arg){
                 request += "&" + i + '=' + arg[i];
             }
