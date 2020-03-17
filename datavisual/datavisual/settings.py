@@ -24,7 +24,8 @@ SECRET_KEY = 'vyk7n-g4+pd4*s3$8$^p=b_hb+_x2xfhd(bc12&lm448@-3#w&'
 # SECURITY WARNING: don't run with debug turned on in production!	
 DEBUG = True	
 
-ALLOWED_HOSTS = ['cunch.herokuapp.com', 'https://cunch.herokuapp.com/']	
+ALLOWED_HOSTS = ['cunch.herokuapp.com', 
+                'https://cunch.herokuapp.com/']	
 
 
 # Application definition	
@@ -109,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'	
 
-TIME_ZONE = 'UTC'	
+TIME_ZONE = 'America/Edmonton'	
 
 USE_I18N = True	
 
@@ -122,5 +123,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/	
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+STATIC_ROOT = '/visual/static/'
 CORS_ORIGIN_ALLOW_ALL = True
